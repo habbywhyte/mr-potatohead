@@ -20,17 +20,22 @@
  * @subpackage Mr_Potatohead/includes
  * @author     Habby Whyte <bahybaj@hotmail.com>
  */
-class Mr_Potatohead_Activator {
+class Mr_Potatohead_Activator
+{
 
-	/**
-	 * Short Description. (use period)
-	 *
-	 * Long Description.
-	 *
-	 * @since    1.0.0
-	 */
-	public static function activate() {
+    /**
+     * Short Description. (use period)
+     *
+     * Long Description.
+     *
+     * @since    1.0.0
+     */
+    public static function activate()
+    {
+        if (current_user_can('activate_plugins')) {
+            $settings = new Mr_Potatohead_Settings();
+            $settings->add_option_defaults();
+        }
 
-	}
-
+    }
 }

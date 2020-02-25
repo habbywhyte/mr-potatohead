@@ -39,7 +39,10 @@ class Mr_Potatohead {
 	 */
 	protected $loader;
 
-	/**
+    protected $mr_potatoheads_post_type;
+
+
+    /**
 	 * The unique identifier of this plugin.
 	 *
 	 * @since    1.0.0
@@ -78,8 +81,11 @@ class Mr_Potatohead {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+		$this->register_post_types();
+        $this->register_shortcodes();
 
-	}
+
+    }
 
 	/**
 	 * Load the required dependencies for this plugin.
@@ -122,9 +128,25 @@ class Mr_Potatohead {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-mr-potatohead-public.php';
 
-		$this->loader = new Mr_Potatohead_Loader();
+        /**
+         * class file for plugin settings
+         */
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mr-potatohead-settings.php';
 
-	}
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mr-potatohead-shortcodes.php';
+
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mr-potatoheads-post-type.php';
+
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-meta-box.php';
+
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mr-potatoheads-meta-box.php';
+
+        $this->loader = new Mr_Potatohead_Loader();
+
+        $this->mr_potatoheads_post_type = new MrPotatoHeads_Post_Type();
+
+
+    }
 
 	/**
 	 * Define the locale for this plugin for internationalization.
@@ -150,14 +172,33 @@ class Mr_Potatohead {
 	 * @since    1.0.0
 	 * @access   private
 	 */
-	private function define_admin_hooks() {
+	private function define_admin_hooks()
+    {
 
-		$plugin_admin = new Mr_Potatohead_Admin( $this->get_plugin_name(), $this->get_version() );
+        $plugin_admin = new Mr_Potatohead_Admin($this->get_plugin_name(), $this->get_version());
 
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
-		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
+        $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+        $mrp_settings = new Mr_Potatohead_Settings();
+        if (is_admin()) {
+            $this->loader->add_action('admin_init', $mrp_settings, 'settings_init');
+        }
 
-	}
+        switch ( $this->get_current_post_type() ) {
+            case 'mrpotatoheads':
+            case 'edit-mrpotatoheads':
+                $mrpotatoheads_meta_box = new Mr_Potatoheads_Meta_Box();
+                $this->loader->add_action( 'add_meta_boxes', $mrpotatoheads_meta_box, 'meta_box_init' );
+                $this->loader->add_action( 'admin_menu', $mrpotatoheads_meta_box, 'remove_meta_boxes' );
+                $this->loader->add_action( 'save_post', $mrpotatoheads_meta_box, 'post_meta_save' );
+                break;
+
+
+            default:
+                break;
+        }
+
+    }
 
 	/**
 	 * Register all of the hooks related to the public-facing functionality
@@ -214,5 +255,34 @@ class Mr_Potatohead {
 	public function get_version() {
 		return $this->version;
 	}
+    /**
+     * Register shortcodes
+     */
+    private function register_shortcodes() {
+        $shortcodes = new Mr_Potatohead_Shortcodes();
+        $shortcodes->register_shortcodes();
+    }
+
+    private function register_post_types() {
+        $this->loader->add_action('init', $this->mr_potatoheads_post_type, 'register');
+    }
+
+    private function get_current_post_type() {
+        if ( isset( $_REQUEST['post_type'] )  ) {
+            return $_REQUEST['post_type'];
+        }
+        elseif (isset( $_REQUEST['screen_id'] ) ) {
+            return $_REQUEST['screen_id'];
+        }
+        elseif (isset( $_POST['screen_id'] ) ) {
+            return $_POST['screen_id'];
+        }
+        else {
+            if ( isset( $_REQUEST['post'])) {
+                $post_type = get_post_type( $_REQUEST['post'] );
+                return $post_type;
+            }
+        }
+    }
 
 }

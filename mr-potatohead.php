@@ -25,6 +25,14 @@
  * Domain Path:       /languages
  */
 
+if (!defined('MR_POTATOHEAD_OPTIONS_NAME')) {
+    define('MR_POTATOHEAD_OPTIONS_NAME', 'mr_potatohead_settings');
+}
+if (!defined('MR_POTATOHEAD_TEXTDOMAIN')) {
+    define('MR_POTATOHEAD_TEXTDOMAIN', 'mr_potatohead');
+}
+
+
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
