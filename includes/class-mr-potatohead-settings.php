@@ -25,7 +25,7 @@ class Mr_Potatohead_Settings {
 	 */
 	private $default_use_widget_area = false;
 	private $default_remove_data_on_uninstall = false;
-	private $version = GUESTABA_CORVOMAP_VERSION_NUM ;
+	private $version = MR_POTATOHEAD_VERSION ;
 	
 	/**
 	 * Constructor
@@ -61,13 +61,14 @@ class Mr_Potatohead_Settings {
 			$options = array();
 			$options['remove_data_on_uninstall'] = $this->default_remove_data_on_uninstall;
 			$options['version'] = $this->version ;
-			$options['default_potato_image'] = plugin_dir_url() . 'mr-potatohead' . '/' . 'public/images/raw_potato.png';
+			$options['default_potato_image'] = plugin_dir_url(__FILE__) . 'mr-potatohead' . '/' . 'public/images/raw_potato.png';
             $options['default_potato_background'] = '#FFFFFF';
 
 
 
             add_option( $this->options_name, $options );
 		}
+
 		
 	}
 
@@ -138,6 +139,15 @@ class Mr_Potatohead_Settings {
 			'mrp-settings-general-section'
 		);
 
+		// settings field google maps api key
+		add_settings_field(
+			'default_potato_image',
+			__( 'Default Potato Image', MR_POTATOHEAD_TEXTDOMAIN ),
+			array($this, 'default_potato_image_render'),
+			'mrp-settings-page',
+			'mrp-settings-general-section'
+		);
+
 
 	}
 	
@@ -203,11 +213,19 @@ class Mr_Potatohead_Settings {
 	
 		$options = get_option( $this->options_name );
 		?>
-		<input id="remove_mrp_data_input" type="checkbox" name="guestaba_mrp_settings[mrp_remove_data_on_uninstall]" <?php checked( $options['mrp_remove_data_on_uninstall'], 1 ); ?> value='1'>
+		<input id="remove_mrp_data_input" type="checkbox" name="habbywhyte_mrp_settings[mrp_remove_data_on_uninstall]" <?php checked( $options['remove_data_on_uninstall'], 1 ); ?> value='1'>
 		<br><label for="remove_mrp_data_input"><em>Leave this unchecked unless you really want to remove the posts you have created using this plugin.</em></label>
 		<?php
 	
 	}
+
+	public function default_potato_image_render() {
+		$options = get_option( $this->options_name );
+		?>
+        <input type="text" size="100" name="habbywhyte_mrp_settings[default_potato_image]"
+               value="<?php echo $options['default_potato_image']; ?>">
+		<?php
+    }
 
 
 

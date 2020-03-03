@@ -32,18 +32,20 @@ if (!defined('MR_POTATOHEAD_TEXTDOMAIN')) {
     define('MR_POTATOHEAD_TEXTDOMAIN', 'mr_potatohead');
 }
 
+if (!defined('MR_POTATOHEAD_VERSION')) {
+	define('MR_POTATOHEAD_VERSION', '0.0.1');
+}
+
+if (!defined('MR_POTATOHEAD_POST_TYPE')) {
+	define('MR_POTATOHEAD_POST_TYPE', 'mrpotatoheads');
+}
+
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
 
-/**
- * Currently plugin version.
- * Start at version 1.0.0 and use SemVer - https://semver.org
- * Rename this for your plugin and update it as you release new versions.
- */
-define( 'MR_POTATOHEAD_VERSION', '1.0.0' );
 
 /**
  * The code that runs during plugin activation.

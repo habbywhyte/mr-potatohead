@@ -10,7 +10,7 @@ class Mr_Potatoheads_Meta_Box extends Meta_Box {
 
 
 	public function __construct() {
-		$this->setPostType( 'mr_potatoheads' );
+		$this->setPostType( MR_POTATOHEAD_POST_TYPE );
 		$this->setMetaBoxID(  'mr_potatoheads_meta_box' );
 		$this->setMetaBoxTitle(  __( 'Mr. Potato Heads_options', MR_POTATOHEAD_TEXTDOMAIN ) );
 		$this->setNonceId( 'mr_potatoheads_mb_nonce');

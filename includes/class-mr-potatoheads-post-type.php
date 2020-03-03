@@ -47,7 +47,7 @@ class MrPotatoHeads_Post_Type {
 	
 	public function __construct() {
 		
-		$this->post_type = 'mrpotatoheads';
+		$this->post_type = MR_POTATOHEAD_POST_TYPE;
 		
 		$theme = wp_get_theme();
 		$text_domain = MR_POTATOHEAD_TEXTDOMAIN;

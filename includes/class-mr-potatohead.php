@@ -141,6 +141,8 @@ class Mr_Potatohead {
 
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mr-potatoheads-meta-box.php';
 
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-mr-potatohead-menu-pages.php';
+
         $this->loader = new Mr_Potatohead_Loader();
 
         $this->mr_potatoheads_post_type = new MrPotatoHeads_Post_Type();
@@ -179,14 +181,20 @@ class Mr_Potatohead {
 
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_styles');
         $this->loader->add_action('admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts');
+
+
         $mrp_settings = new Mr_Potatohead_Settings();
+
+        $mrp_menu_pages = new Mr_Potatohead_Menu_Pages();
         if (is_admin()) {
+	        $this->loader->add_action( 'admin_menu', $mrp_settings, 'add_mrp_options_page' );
             $this->loader->add_action('admin_init', $mrp_settings, 'settings_init');
+	        $this->loader->add_action( 'admin_menu', $mrp_menu_pages, 'admin_menu_pages' );
         }
 
         switch ( $this->get_current_post_type() ) {
-            case 'mrpotatoheads':
-            case 'edit-mrpotatoheads':
+            case MR_POTATOHEAD_POST_TYPE :
+            case 'edit-' . MR_POTATOHEAD_POST_TYPE :
                 $mrpotatoheads_meta_box = new Mr_Potatoheads_Meta_Box();
                 $this->loader->add_action( 'add_meta_boxes', $mrpotatoheads_meta_box, 'meta_box_init' );
                 $this->loader->add_action( 'admin_menu', $mrpotatoheads_meta_box, 'remove_meta_boxes' );
